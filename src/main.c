@@ -8,17 +8,18 @@
 void
 on_data(char* chunk, size_t len)
 {
-    chunk_parse(chunk, len);
-    if (!chunk_is_move_description()) {
-        clear();
-        player_t** players = chunk_get_players();
-        gfx_draw_player_info(players);
+    struct chunk c;
+    if (!chunk_parse(chunk, len, &c)) {
+        return;
     }
-    char* fen   = (char*)chunk_get_fen();
+    if (c.type == CHUNK_FEATURED) {
+        clear();
+        gfx_draw_player_info(c.players);
+    }
+    char* fen   = c.fen;
     char* board = fen_to_board(fen);
     gfx_draw_board(board);
     refresh();
-    chunk_destroy();
 }
 
 int

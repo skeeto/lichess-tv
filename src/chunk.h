@@ -1,29 +1,18 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include <string.h>
-#include "lib/json.h"
+#include <stddef.h>
 
-typedef struct
-{
-    int is_black;
-    const char* name;
-    const char* rating;
-} player_t;
-
-void
-chunk_parse(char* chunk, size_t len);
+struct chunk {
+    char *fen;
+    struct player {
+        char *name;
+        char *rating;
+    } players[2];
+    enum {CHUNK_UNKNOWN, CHUNK_FEATURED, CHUNK_FEN} type;
+};
 
 int
-chunk_is_move_description();
-
-void
-chunk_destroy();
-
-const char*
-chunk_get_fen();
-
-player_t**
-chunk_get_players();
+chunk_parse(char *buf, size_t len, struct chunk *c);
 
 #endif
